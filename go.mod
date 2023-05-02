@@ -8,6 +8,7 @@ require (
 	github.com/neo4j/neo4j-go-driver/v5 v5.8.0
 	github.com/redis/go-redis/v9 v9.0.3
 	golang.org/x/crypto v0.8.0
+	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 )
 
 require (
