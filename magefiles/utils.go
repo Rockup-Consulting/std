@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"time"
 
+	"github.com/Rockup-Consulting/go_std/core/buildutil"
 	"github.com/Rockup-Consulting/go_std/core/netutil"
 	"github.com/Rockup-Consulting/go_std/x/hashx"
 	"github.com/Rockup-Consulting/go_std/x/randx"
@@ -110,15 +111,15 @@ func MD5(filename string) error {
 	return nil
 }
 
-// func Build() error {
-// 	info, err := buildutil.NewInfo("rockup", "site", "0.0.1", "linux", "amd64")
-// 	if err != nil {
-// 		return err
-// 	}
+func Build() error {
+	info, err := buildutil.NewInfo("rockup", "site", "0.0.1", "linux", "amd64")
+	if err != nil {
+		return err
+	}
 
-// 	buildutil.EmbedBuildInfo(info, func(info buildutil.Info) error {
-// 		return buildutil.BuildGoBin(info)
-// 	})
+	buildutil.EmbedBuildInfo(info, func(info buildutil.Info) error {
+		return buildutil.BuildGoBin(info)
+	})
 
-// 	return nil
-// }
+	return nil
+}
