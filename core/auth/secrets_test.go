@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"rockup/core/auth"
+	"github.com/Rockup-Consulting/go_std/core/auth"
 )
 
 const (

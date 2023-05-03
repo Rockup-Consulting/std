@@ -1,8 +1,9 @@
 package buildutil_test
 
 import (
-	"rockup/core/buildutil"
 	"testing"
+
+	"github.com/Rockup-Consulting/go_std/core/buildutil"
 )
 
 func TestSemver(t *testing.T) {

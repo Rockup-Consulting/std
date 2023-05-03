@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"rockup/core/auth"
 
+	"github.com/Rockup-Consulting/go_std/core/auth"
 	"github.com/Rockup-Consulting/go_std/x/randx"
 )
 

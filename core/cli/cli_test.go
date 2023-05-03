@@ -4,9 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"rockup/core/cli"
 	"strings"
 	"testing"
+
+	"github.com/Rockup-Consulting/go_std/core/cli"
 )
 
 func TestCLI(t *testing.T) {
