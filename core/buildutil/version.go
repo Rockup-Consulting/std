@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -27,8 +28,6 @@ type Info struct {
 }
 
 var (
-	packageDir string = filepath.Join("core", "buildutil")
-
 	//go:embed appName
 	appName string
 
@@ -65,7 +64,7 @@ var (
 	}
 )
 
-func buildTimeCheck() {
+func buildTimeCheck(packageDir string) {
 	dir, err := os.Stat(packageDir)
 	if err != nil {
 		panic(err)
@@ -120,17 +119,40 @@ type BuildFunc func(info Info) error
 // BuildFunc(s). After the BuildFunc(s) have been executed, the build info is replaced with dummy
 // information. The binary/image build must happen within the BuildFunc(s) for the build information
 // to be embedded in the executable.
-func EmbedBuildInfo(i Info, f ...BuildFunc) bool {
-	buildTimeCheck()
+func EmbedBuildInfo(i Info, f ...BuildFunc) error {
+	_, callerPath, _, ok := runtime.Caller(0)
+	if !ok {
+		return errors.New("problem getting package path")
+	}
 
-	writeFile("appName", i.AppName)
-	writeFile("buildOs", i.Os)
-	writeFile("buildArch", i.Arch)
-	writeFile("orgName", i.OrgName)
-	writeFile("buildHash", i.BuildHash)
-	writeFile("buildVersion", i.Version)
-	writeFile("buildTimeUTC", i.BuildTimeUTC)
-	writeFile("buildTimeSAST", i.BuildTimeSAST)
+	packageDir, _ := filepath.Split(callerPath)
+
+	buildTimeCheck(packageDir)
+
+	if err := writeFile("appName", i.AppName, packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildOs", i.Os, packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildArch", i.Arch, packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("orgName", i.OrgName, packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildHash", i.BuildHash, packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildVersion", i.Version, packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildTimeUTC", i.BuildTimeUTC, packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildTimeSAST", i.BuildTimeSAST, packageDir); err != nil {
+		return err
+	}
 
 	// execute buildfunc
 	for _, ff := range f {
@@ -138,31 +160,47 @@ func EmbedBuildInfo(i Info, f ...BuildFunc) bool {
 		if err != nil {
 			if err != nil {
 				fmt.Println(err)
-				return false
+				return err
 			}
 		}
 	}
 
 	// replace build info with dummy info
-	writeFile("appName", "no name")
-	writeFile("orgName", "mega corp")
-	writeFile("buildOs", "")
-	writeFile("buildArch", "")
-	writeFile("buildHash", "hash")
-	writeFile("buildVersion", "develop")
-	writeFile("buildTimeUTC", "now")
-	writeFile("buildTimeSAST", "now")
+	if err := writeFile("appName", "no name", packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("orgName", "mega corp", packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildOs", "", packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildArch", "", packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildHash", "hash", packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildVersion", "develop", packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildTimeUTC", "now", packageDir); err != nil {
+		return err
+	}
+	if err := writeFile("buildTimeSAST", "now", packageDir); err != nil {
+		return err
+	}
 
-	return true
+	return nil
 }
 
 // utility for writing information to the specified file
-func writeFile(fileName, content string) {
+func writeFile(fileName, content, packageDir string) error {
 	fp := filepath.Join(packageDir, fileName)
-	err := os.WriteFile(fp, []byte(content), fs.FileMode(os.O_WRONLY))
-	if err != nil {
-		panic(err.Error())
+	if err := os.WriteFile(fp, []byte(content), fs.FileMode(os.O_WRONLY)); err != nil {
+		return err
 	}
+	return nil
 }
 
 // Version Bumping
