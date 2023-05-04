@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -197,9 +196,14 @@ func EmbedBuildInfo(i Info, f ...BuildFunc) error {
 // utility for writing information to the specified file
 func writeFile(fileName, content, packageDir string) error {
 	fp := filepath.Join(packageDir, fileName)
-	if err := os.WriteFile(fp, []byte(content), fs.FileMode(os.O_WRONLY)); err != nil {
+
+	f, err := os.Create(fp)
+	if err != nil {
 		return err
 	}
+
+	fmt.Fprint(f, content)
+
 	return nil
 }
 
