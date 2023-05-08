@@ -31,12 +31,3 @@ func BuildGoBin(info Info) error {
 
 	return nil
 }
-
-func s(args ...string) string {
-	out := ""
-	for _, ss := range args {
-		out += ss
-	}
-
-	return out
-}

@@ -1,41 +1,22 @@
 package cli
 
 import (
+	"context"
 	"fmt"
-	"io"
 )
 
-// Func implements executable
-type Func func(args []string) error
+type Func func(ctx context.Context, args ...string) error
 
-type funcExec struct {
-	this *command
+type fn struct {
 	f    Func
+	name string
+	desc string
 }
 
-func (f funcExec) Exec(args []string) error {
-	return f.f(args)
+func (f fn) Exec(ctx context.Context, args ...string) error {
+	return f.f(ctx, args...)
 }
 
-func (m *Menu) createFunc(arg string, d, h string, f Func) *command {
-	cmnd := &command{
-		a:   m.a,
-		arg: arg,
-		w:   m.this.w,
-		d:   d,
-		h:   h,
-	}
-
-	e := funcExec{
-		this: cmnd,
-		f:    f,
-	}
-
-	cmnd.e = e
-
-	return cmnd
-}
-
-func (f funcExec) Print(w io.Writer) {
-	fmt.Fprintf(w, "  %s\t%s\n", f.this.arg, f.this.d)
+func (f fn) print() string {
+	return fmt.Sprintf("\t%s\t%s\n", f.name, f.desc)
 }

@@ -322,3 +322,12 @@ func AssertSemverBump(bump string) {
 		panic(fmt.Sprintf("Invalid version bump %q. Expected 'major', 'minor' or 'patch'", bump))
 	}
 }
+
+func s(args ...string) string {
+	out := ""
+	for _, ss := range args {
+		out += ss
+	}
+
+	return out
+}
