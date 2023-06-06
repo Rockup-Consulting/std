@@ -19,9 +19,7 @@ func NewApp(name, overview string) (*App, *Menu) {
 		indexed:  make(map[string]Executable),
 	}
 
-	app := &App{
-		menu: menu,
-	}
+	app := &App{menu}
 
 	return app, menu
 }

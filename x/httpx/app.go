@@ -61,20 +61,11 @@ func (a *App) Handle(method string, path string, handler Handler, mw ...Middlewa
 	// The function to execute for each request.
 	h := func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		acceptGzip := acceptsGzip(r)
-
-		// call the handler (with gzip if necessary)
-		var err error
-		if acceptGzip {
-			err = serveGzip(ctx, w, r, handler)
-		} else {
-			err = handler(ctx, w, r)
-		}
 
 		// if the error hasn't been handled by this point, it has propogated all the way out of our
 		// call chain. If we're catching the error with a dedicated error middleware we should not
 		// get to this point.
-		if err != nil {
+		if err := handler(ctx, w, r); err != nil {
 			panic(fmt.Sprintf("uncaught error: %s", err))
 		}
 	}

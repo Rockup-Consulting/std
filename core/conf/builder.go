@@ -113,6 +113,7 @@ func (b *Builder) Build() (*Conf, error) {
 		var usage string
 		var confString string
 
+		// this is required to print a sensible value for URLs
 		urlStruct, isURL := val.(url.URL)
 		confString = fmt.Sprintf("%s\t", k)
 		usage = fmt.Sprintf("%s\t%s\t%s", k, f.Type, f.Description)
@@ -168,7 +169,6 @@ func (b *Builder) Build() (*Conf, error) {
 				} else {
 					confString = fmt.Sprint(confString, val)
 				}
-
 			}
 
 			newField := f
