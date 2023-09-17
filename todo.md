@@ -1,7 +1,6 @@
 # Migrate Packages
 
 ## x
-- cryptox
 - regx
 - hashx
 - logx
@@ -18,6 +17,7 @@
 ## unsure
 - form
 - v(alidate)
+- should we remove x/regx and replace with v(alidate) completely?
 
 ## examples
 - http server startup
