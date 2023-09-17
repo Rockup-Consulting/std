@@ -2,6 +2,17 @@
 
 Rockup/Go utilities and extensions
 
+## Overview
+Rockup Go StdLib is a collection of extensions and commonly used helpers. There are three main categories
+that you should be aware of:
+- core: helper packages that provide useful functionality
+- x: extensions for standard library packages and client drivers
+- beta: packages that do not fall under the semantic versioning guarantee, they are still being evaluated
+
+Further, there is a collection of common patterns under internal/examples. We also keep deprecated packages under internal/archive.
+
+
+
 
 ## Approved Third Party Packages
 - github.com/dimfeld/httptreemux (remove once this approval is through)
