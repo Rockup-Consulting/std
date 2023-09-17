@@ -1,11 +1,12 @@
-// Package encrypt is a small wrapper package that simplifies usage of encryption tooling.
+// Package cryptox is a small wrapper package that simplifies usage of crypto tooling.
 // Specifically, we wrap the Advanced Encryption Standard cipher in a service called
-// encrypt.Service.
+// encrypt.Service
 //
 // To learn more about AES in Go, refer to: https://tutorialedge.net/golang/go-encrypt-decrypt-aes-tutorial/
 package cryptox
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -13,10 +14,12 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
+	"encoding/json"
 	"encoding/pem"
 	"errors"
 	"fmt"
 	"io"
+	"strconv"
 )
 
 // AES
@@ -56,19 +59,16 @@ func NewService(secret string) (Service, error) {
 }
 
 // Encrypt is a method on Service that encrypts a value. See 'Decrypt' to reverse the encryption.
-func (s Service) Encrypt(val string) string {
-
-	text := []byte(val)
-
+func (s Service) Encrypt(val []byte) []byte {
 	nonce := make([]byte, s.gcm.NonceSize())
 
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		panic(err.Error())
 	}
 
-	encryptedValue := s.gcm.Seal(nonce, nonce, text, nil)
+	encryptedValue := s.gcm.Seal(nonce, nonce, val, nil)
 
-	return string(encryptedValue)
+	return encryptedValue
 }
 
 // Decrypt is a method on Service that reverses the encryption process. Either the unencrypted value
@@ -76,22 +76,19 @@ func (s Service) Encrypt(val string) string {
 //
 // If the error is due to an invalid value, the error will be ErrInvalidVal, this can be verified
 // using the encrypt.IsInvalidValErr helper
-func (s Service) Decrypt(val string) (string, error) {
-
-	text := []byte(val)
-
+func (s Service) Decrypt(val []byte) ([]byte, error) {
 	nonceSize := s.gcm.NonceSize()
-	if len(text) < nonceSize {
-		return "", ErrInvalidVal
+	if len(val) < nonceSize {
+		return nil, ErrInvalidVal
 	}
 
-	nonce, ciphertext := text[:nonceSize], text[nonceSize:]
+	nonce, ciphertext := val[:nonceSize], val[nonceSize:]
 	plaintext, err := s.gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		return "", ErrInvalidVal
+		return nil, ErrInvalidVal
 	}
 
-	return string(plaintext), nil
+	return plaintext, nil
 }
 
 // RSA
@@ -190,4 +187,134 @@ var ErrInvalidVal = errors.New("invalid value: your value was likely never encry
 
 func IsInvalidValErr(err error) bool {
 	return errors.Is(err, ErrInvalidVal)
+}
+
+// ====================================================================
+// AES ROTATION SERVICE
+
+type Secrets map[uint64]string
+
+func SecretsFromJSON(jsonBytes []byte) (Secrets, error) {
+	var secrets Secrets
+	if err := json.Unmarshal(jsonBytes, &secrets); err != nil {
+		return Secrets{}, err
+	}
+
+	return secrets, nil
+}
+
+func SecretsFromString(str string) (Secrets, error) {
+	jsonBytes, err := base64.URLEncoding.DecodeString(str)
+	if err != nil {
+		return Secrets{}, nil
+	}
+
+	var secrets Secrets
+	if err := json.Unmarshal(jsonBytes, &secrets); err != nil {
+		return Secrets{}, err
+	}
+
+	return secrets, nil
+}
+
+func SecretsToString(secrets Secrets) (string, error) {
+	jsonBytes, err := json.Marshal(secrets)
+	if err != nil {
+		return "", err
+	}
+
+	out := base64.URLEncoding.EncodeToString(jsonBytes)
+
+	return out, nil
+}
+
+func EncodeJSONSecrets(jsonBytes []byte) (string, error) {
+	secrets, err := SecretsFromJSON(jsonBytes)
+	if err != nil {
+		return "", err
+	}
+
+	return SecretsToString(secrets)
+}
+
+type RotationService struct {
+	EncServices map[uint64]Service
+	Latest      uint64
+}
+
+func NewRotationService(secrets Secrets) (RotationService, error) {
+	if len(secrets) < 1 {
+		return RotationService{}, errors.New("cannot create a RotationService with no secrets")
+	}
+
+	out := make(map[uint64]Service, len(secrets))
+
+	latest := uint64(0)
+	for id, secret := range secrets {
+		enc, err := NewService(secret)
+		if err != nil {
+			return RotationService{}, err
+		}
+
+		if id > latest {
+			latest = id
+		}
+
+		out[id] = enc
+	}
+
+	return RotationService{
+		EncServices: out,
+		Latest:      latest,
+	}, nil
+}
+
+var delim = []byte("$")
+
+func (r RotationService) Encrypt(val []byte) []byte {
+	enc, ok := r.EncServices[r.Latest]
+	if !ok {
+		panic(fmt.Sprintf("failed to find latest enc service with ID -> %d", r.Latest))
+	}
+
+	encrypted := enc.Encrypt(val)
+
+	out := bytes.Join([][]byte{
+		[]byte(fmt.Sprintf("%d", r.Latest)),
+		encrypted,
+	}, delim)
+
+	return out
+}
+
+func (r RotationService) Decrypt(val []byte) ([]byte, bool, error) {
+	out := bytes.SplitN(val, delim, 2)
+	if len(out) != 2 {
+		return nil, false, ErrInvalidVal
+	}
+
+	idBytes := out[0]
+	encryptedVal := out[1]
+
+	id, err := strconv.ParseUint(string(idBytes), 10, 0)
+	if err != nil {
+		return nil, false, ErrInvalidVal
+	}
+
+	enc, ok := r.EncServices[id]
+	if !ok {
+		return nil, false, ErrInvalidVal
+	}
+
+	decryptedVal, err := enc.Decrypt(encryptedVal)
+	if err != nil {
+		return nil, false, ErrInvalidVal
+	}
+
+	var shouldRefresh bool
+	if id != r.Latest {
+		shouldRefresh = true
+	}
+
+	return decryptedVal, shouldRefresh, nil
 }
