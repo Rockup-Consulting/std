@@ -15,7 +15,9 @@ Further, there is a collection of common patterns under internal/examples. We al
 
 
 ## Approved Third Party Packages
-- github.com/dimfeld/httptreemux (remove once this approval is through)
+The following is a list of packages that have been approved for usage within Rockup projects.
+
+- github.com/dimfeld/httptreemux (remove once [this](https://github.com/golang/go/issues/61410) approval is through)
 - github.com/jackc/pgx
 - github.com/neo4j/neo4j-go-driver/v5
 - github.com/dgraph-io/badger
@@ -30,5 +32,7 @@ Further, there is a collection of common patterns under internal/examples. We al
 - github.com/go-telegram-bot-api/telegram-bot-api/v5
 
 ## Evaluating Packages
+The following is a list of packages that are under evaluation for common project usage approval.
+
 - github.com/yuin/goldmark (I think this package is better, but will still have to play a bit)
 - github.com/gomarkdown/markdown
