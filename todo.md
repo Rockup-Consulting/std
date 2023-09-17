@@ -1,7 +1,6 @@
 # Migrate Packages
 
 ## x
-- neox
 - twx
 
 ## core
