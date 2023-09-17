@@ -3,8 +3,6 @@
 package logx
 
 import (
-	"bufio"
-	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -34,25 +32,6 @@ func NewWriteLogger(w io.Writer, prefix string) *log.Logger {
 	}
 
 	return log.New(w, prefix, defaultFlags)
-}
-
-// NewBufferedLogger creates a new *log.Logger that writes to a buffer. It
-// takes an optional prefix as an argument and returns a *log.Logger as well
-// as a function to flush the logger.
-func NewBufferedLogger(prefix string) (*log.Logger, func() string) {
-	if prefix != "" {
-		prefix = prefix + ": "
-	}
-
-	var buf bytes.Buffer
-	w := bufio.NewWriter(&buf)
-
-	l := log.New(w, prefix, defaultFlags)
-
-	return l, func() string {
-		w.Flush()
-		return buf.String()
-	}
 }
 
 // NewTestLogger creates and returns a new *log.Logger with output specifically

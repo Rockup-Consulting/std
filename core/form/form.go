@@ -68,7 +68,7 @@ var AlphaNumeric ValidationFunc = func(name, val string) (string, error) {
 	return val, nil
 }
 
-var Matches = func(m ...string) ValidationFunc {
+var MatchesOne = func(m ...string) ValidationFunc {
 	return func(name, val string) (string, error) {
 		for _, mm := range m {
 			if val == mm {

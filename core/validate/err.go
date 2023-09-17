@@ -19,6 +19,7 @@ const (
 	FailedToParse        FailureReason = "FAILED_TO_PARSE"
 	ShouldBeNumeric      FailureReason = "SHOULD_BE_NUMERIC"
 	Mismatch             FailureReason = "MISMATCH"
+	DoesNotExist         FailureReason = "DOES_NOT_EXIST"
 )
 
 func EitherOrFailure(fields ...string) FailureReason {
