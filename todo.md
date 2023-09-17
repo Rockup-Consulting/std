@@ -1,12 +1,10 @@
 # Migrate Packages
 
 ## x
-- hashx
 - logx
 - neox
 - randx
 - twx
-- pgxx
 
 ## core
 - cli
