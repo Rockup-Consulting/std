@@ -15,7 +15,6 @@
 
 
 ## unsure
-- form
 - v(alidate)
 - should we remove x/regx and replace with v(alidate) completely?
 
