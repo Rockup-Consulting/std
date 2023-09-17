@@ -2,11 +2,9 @@
 
 ## x
 - neox
-- randx
 - twx
 
 ## core
-- cli
 - web
 
 
