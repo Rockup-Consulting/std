@@ -20,7 +20,6 @@ func Now() {
 
 	fmt.Printf("%d-%d-%d\n%d:%d:%d\n", now.Year(), now.Day(), now.Hour(), now.Hour(), now.Minute(), now.Second())
 	fmt.Println(now.Unix())
-
 }
 
 // MyIP prints your current IP address
@@ -61,7 +60,7 @@ func MyIP() error {
 	return nil
 }
 
-// Token prints a random 32byte string
+// UID prints a random 32byte string
 func UID() error {
 	if uid, err := randx.UID(); err != nil {
 		return err
@@ -78,6 +77,8 @@ func PIN() error {
 	return err
 }
 
+// Kill finds the PID of a process running on the specified port and then kills it
+// or, atleast, it is supposed to kill it
 func Kill(port int) error {
 	cmd := exec.Command("lsof", "-i", ":4000")
 	var buf bytes.Buffer
@@ -92,10 +93,12 @@ func Kill(port int) error {
 	return nil
 }
 
+// Hash prints out a Bcrypt hash of the provided value
 func Hash(password string) {
 	fmt.Println(hashx.BcryptNew(password))
 }
 
+// MD5 prints out an MD5 hash of the provided file
 func MD5(filename string) error {
 	f, err := os.Open(filename)
 	if err != nil {

@@ -1,0 +1,27 @@
+{
+    "editor.rulers": [
+        100
+    ],
+    "editor.fontFamily": "Fira Code",
+    "editor.fontLigatures": true,
+    "files.exclude": {
+        // Add files here to hide them
+        ".gitignore": true,
+    },
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "comment",
+                "settings": {
+                    "fontStyle": ""
+                }
+            }
+        ]
+    },
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#ff4081"
+    },
+    // this is crucial for working with Go Tempaltes
+    "html.format.wrapAttributes": "force-expand-multiline",
+    "html.format.templating": true,
+}

@@ -2,7 +2,8 @@
 
 Rockup/Go utilities and extensions
 
-## Approved Packages
+
+## Approved Third Party Packages
 - github.com/dimfeld/httptreemux (remove once this approval is through)
 - github.com/jackc/pgx
 - github.com/neo4j/neo4j-go-driver/v5
