@@ -1,4 +1,4 @@
-package httpx
+package web
 
 import (
 	"net/http"
@@ -11,16 +11,6 @@ const (
 	DefaultIdleTimeout     = time.Second * 120
 	DefaultShutdownTimeout = time.Second * 20
 )
-
-func NewDefaultServer(addr string, handler http.Handler) http.Server {
-	server := http.Server{
-		Addr:    addr,
-		Handler: handler,
-	}
-	SetServerDefaults(&server)
-
-	return server
-}
 
 func SetServerDefaults(server *http.Server) {
 	server.MaxHeaderBytes = http.DefaultMaxHeaderBytes

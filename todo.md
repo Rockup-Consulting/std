@@ -1,13 +1,8 @@
 # Migrate Packages
 
 ## core
-- web
-
-
-## unsure
-- v(alidate)
-- should we remove x/regx and replace with v(alidate) completely?
+- v(alidate) [get from nerdwod]
+- add tmpl logic to web
 
 ## examples
-- http server startup
 - vscode settings

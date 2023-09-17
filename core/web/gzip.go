@@ -1,4 +1,4 @@
-package httpx
+package web
 
 import (
 	"compress/gzip"
@@ -33,5 +33,5 @@ func serveGzip(ctx context.Context, w http.ResponseWriter, r *http.Request, f Ha
 		GzipWriter:     gzw,
 	}
 
-	return f(ctx, gzipRW, r)
+	return f(gzipRW, r)
 }

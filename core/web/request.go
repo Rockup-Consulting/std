@@ -1,4 +1,4 @@
-package httpx
+package web
 
 import (
 	"fmt"
@@ -16,12 +16,4 @@ func PathParam(r *http.Request, key string) string {
 	}
 
 	return param
-}
-
-// QueryParam is a convenient method for getting a query param in the URL
-func QueryParam(r *http.Request, key string) (string, bool) {
-	ok := r.URL.Query().Has(key)
-	param := r.URL.Query().Get(key)
-
-	return param, ok
 }
