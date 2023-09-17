@@ -78,7 +78,7 @@ func (r RotationService) Decrypt(val []byte) ([]byte, bool, error) {
 		return nil, false, ErrInvalidVal
 	}
 
-	decryptedVal, err := enc.Decrypt(encryptedVal)
+	decryptedVal, _, err := enc.Decrypt(encryptedVal)
 	if err != nil {
 		return nil, false, ErrInvalidVal
 	}

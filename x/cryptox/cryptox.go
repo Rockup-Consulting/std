@@ -14,7 +14,7 @@ import (
 
 type Encrypter interface {
 	Encrypt(val []byte) []byte
-	Decrypt(val []byte) ([]byte, error)
+	Decrypt(val []byte) ([]byte, bool, error)
 }
 
 // Service wraps an aes cipher for simplified usage.
@@ -68,17 +68,19 @@ func (s Service) Encrypt(val []byte) []byte {
 //
 // If the error is due to an invalid value, the error will be ErrInvalidVal, this can be verified
 // using the encrypt.IsInvalidValErr helper
-func (s Service) Decrypt(val []byte) ([]byte, error) {
+func (s Service) Decrypt(val []byte) ([]byte, bool, error) {
+	var shouldRefresh bool
+
 	nonceSize := s.gcm.NonceSize()
 	if len(val) < nonceSize {
-		return nil, ErrInvalidVal
+		return nil, shouldRefresh, ErrInvalidVal
 	}
 
 	nonce, ciphertext := val[:nonceSize], val[nonceSize:]
 	plaintext, err := s.gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		return nil, ErrInvalidVal
+		return nil, shouldRefresh, ErrInvalidVal
 	}
 
-	return plaintext, nil
+	return plaintext, shouldRefresh, nil
 }
