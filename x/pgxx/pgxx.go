@@ -23,7 +23,7 @@ var (
 	DevArgs = Args{
 		Host:              "localhost",
 		Port:              "5432",
-		Database:          "celbux",
+		Database:          "postgres",
 		UserName:          "postgres",
 		Password:          "",
 		ConnectionTimeout: 1,

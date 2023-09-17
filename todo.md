@@ -1,7 +1,6 @@
 # Migrate Packages
 
 ## x
-- regx
 - hashx
 - logx
 - neox
