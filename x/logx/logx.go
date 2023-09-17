@@ -12,7 +12,7 @@ import (
 	"github.com/Rockup-Consulting/go_std/x/twx"
 )
 
-const defaultFlags = log.Ldate | log.Ltime | log.LUTC | log.Lmsgprefix
+const DefaultFlags = log.Ldate | log.Ltime | log.LUTC | log.Lmsgprefix
 
 // New creates a stdout *log.Logger with our default flags, it takes an optional
 // prefix as an argument.
@@ -21,7 +21,7 @@ func New(prefix string) *log.Logger {
 		prefix = prefix + ": "
 	}
 
-	return log.New(os.Stdout, prefix, defaultFlags)
+	return log.New(os.Stdout, prefix, DefaultFlags)
 }
 
 // NewWriteLogger creates a new *log.Logger that writes to a io.Writer. It takes an
@@ -31,7 +31,7 @@ func NewWriteLogger(w io.Writer, prefix string) *log.Logger {
 		prefix = prefix + ": "
 	}
 
-	return log.New(w, prefix, defaultFlags)
+	return log.New(w, prefix, DefaultFlags)
 }
 
 // NewTestLogger creates and returns a new *log.Logger with output specifically

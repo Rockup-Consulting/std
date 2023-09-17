@@ -1,7 +1,6 @@
 # Migrate Packages
 
 ## x
-- logx
 - neox
 - randx
 - twx
