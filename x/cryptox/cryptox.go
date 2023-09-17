@@ -12,6 +12,11 @@ import (
 	"io"
 )
 
+type Encrypter interface {
+	Encrypt(val []byte) []byte
+	Decrypt(val []byte) ([]byte, error)
+}
+
 // Service wraps an aes cipher for simplified usage.
 type Service struct {
 	gcm cipher.AEAD
