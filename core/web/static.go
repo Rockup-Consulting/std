@@ -11,6 +11,8 @@ import (
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/Rockup-Consulting/go_std/x/logx"
 )
 
 // ETAG CACHING
@@ -61,9 +63,14 @@ func md5Util(r io.Reader) (string, error) {
 
 const DefaultCacheSeconds = 600
 
-func StaticHandler(fs fs.FS, l *log.Logger, cacheSeconds int) http.HandlerFunc {
+func StaticHandler(fs fs.FS, l *log.Logger, cacheSeconds int, discardLogs bool) http.HandlerFunc {
 	c := newMemCache()
 	fileServer := http.FileServer(http.FS(fs))
+
+	// overwrite the logger with one that discards logs
+	if discardLogs {
+		l = logx.NewDiscard()
+	}
 
 	// create an http handler
 	h := func(w http.ResponseWriter, r *http.Request) {

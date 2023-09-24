@@ -34,6 +34,12 @@ func NewWriteLogger(w io.Writer, prefix string) *log.Logger {
 	return log.New(w, prefix, DefaultFlags)
 }
 
+// NewDiscard returns a new logger that discards all logs, this is useful when logs are required
+// for development, but can be discarded in production
+func NewDiscard() *log.Logger {
+	return log.New(io.Discard, "", DefaultFlags)
+}
+
 // NewTestLogger creates and returns a new *log.Logger with output specifically
 // formatted to read nicely in test output. It takes a testing.TB as an argument
 // and returns a *log.Logger as well as a function to flush the logs and write
