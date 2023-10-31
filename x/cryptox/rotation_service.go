@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/Rockup-Consulting/go_std/core/secrets"
+	"github.com/Rockup-Consulting/std/core/secrets"
 )
 
 type RotationService struct {

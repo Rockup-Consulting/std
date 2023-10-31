@@ -9,7 +9,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Rockup-Consulting/go_std/x/twx"
+	"github.com/Rockup-Consulting/std/x/twx"
 )
 
 const DefaultFlags = log.Ldate | log.Ltime | log.LUTC | log.Lmsgprefix

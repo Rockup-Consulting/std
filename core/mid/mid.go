@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Rockup-Consulting/go_std/core/web"
+	"github.com/Rockup-Consulting/std/core/web"
 )
 
 type logResponseWriter struct {

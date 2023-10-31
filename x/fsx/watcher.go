@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Rockup-Consulting/go_std/x/randx"
+	"github.com/Rockup-Consulting/std/x/randx"
 )
 
 type Listener func(name string)

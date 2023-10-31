@@ -9,9 +9,9 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/Rockup-Consulting/go_std/core/netutil"
-	"github.com/Rockup-Consulting/go_std/x/hashx"
-	"github.com/Rockup-Consulting/go_std/x/randx"
+	"github.com/Rockup-Consulting/std/core/netutil"
+	"github.com/Rockup-Consulting/std/x/hashx"
+	"github.com/Rockup-Consulting/std/x/randx"
 )
 
 // Now prints the current date with a timestamp

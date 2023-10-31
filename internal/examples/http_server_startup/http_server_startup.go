@@ -11,9 +11,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Rockup-Consulting/go_std/core/mid"
-	"github.com/Rockup-Consulting/go_std/core/web"
-	"github.com/Rockup-Consulting/go_std/x/logx"
+	"github.com/Rockup-Consulting/std/core/mid"
+	"github.com/Rockup-Consulting/std/core/web"
+	"github.com/Rockup-Consulting/std/x/logx"
 )
 
 var (

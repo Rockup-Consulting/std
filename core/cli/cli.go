@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/Rockup-Consulting/go_std/x/twx"
+	"github.com/Rockup-Consulting/std/x/twx"
 )
 
 // ====================================================================

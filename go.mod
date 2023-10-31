@@ -1,4 +1,4 @@
-module github.com/Rockup-Consulting/go_std
+module github.com/Rockup-Consulting/std
 
 go 1.20
 

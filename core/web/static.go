@@ -12,7 +12,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Rockup-Consulting/go_std/x/logx"
+	"github.com/Rockup-Consulting/std/x/logx"
 )
 
 // ETAG CACHING
