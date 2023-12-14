@@ -1,3 +1,4 @@
+// package cli provides a lightweight, zero-dependency CLI framework.
 package cli
 
 import (
@@ -8,35 +9,47 @@ import (
 	"github.com/Rockup-Consulting/std/x/twx"
 )
 
-// ====================================================================
-// CLI
-
 type Executable interface {
 	Exec(ctx context.Context, args ...string) error
-	print() string
+	GetName() string
+	Print() string
 }
 
 type App struct {
-	menu *Menu
+	Menu *Menu
 }
 
-func NewApp(name, overview string) (*App, *Menu) {
+func NewApp(name, overview string) *App {
 	menu := &Menu{
-		name:     name,
-		overview: overview,
-		ordered:  make([]Executable, 0),
-		indexed:  make(map[string]Executable),
+		Name:     name,
+		Overview: overview,
+		Execs:    make([]Executable, 0),
 	}
 
 	app := &App{menu}
 
-	return app, menu
+	return app
 }
 
 func (a *App) Run(args ...string) error {
 	ctx := context.Background()
 
-	return a.menu.Exec(ctx, args...)
+	return a.Menu.Exec(ctx, args...)
+}
+
+// ====================================================================
+// CONVENIENCE PROXY METHODS
+
+func (a *App) AddFunc(name, desc string, f Func) {
+	a.Menu.AddFunc(name, desc, f)
+}
+
+func (a *App) AddGroup(name string) {
+	a.Menu.AddGroup(name)
+}
+
+func (a *App) AddMenu(name, desc, overview string) *Menu {
+	return a.Menu.AddMenu(name, desc, overview)
 }
 
 // ====================================================================
@@ -54,33 +67,41 @@ func (f fn) Exec(ctx context.Context, args ...string) error {
 	return f.f(ctx, args...)
 }
 
-func (f fn) print() string {
+func (f fn) Print() string {
 	return fmt.Sprintf("\t%s\t%s\n", f.name, f.desc)
+}
+
+func (f fn) GetName() string {
+	return f.name
 }
 
 // ====================================================================
 // GROUP
 
-type group string
+type Group string
 
 // Exec is a dummy method implemented to comply with the Executable interface
-func (g group) Exec(ctx context.Context, args ...string) error {
+func (g Group) Exec(ctx context.Context, args ...string) error {
 	return nil
 }
 
-func (g group) print() string {
+func (g Group) Print() string {
 	return fmt.Sprintf("\n%s:\n", g)
+}
+
+// GetName is a dummy method implemented to comply with the Executable interface
+func (g Group) GetName() string {
+	return ""
 }
 
 // ====================================================================
 // MENU
 
 type Menu struct {
-	name     string
-	desc     string
-	overview string
-	indexed  map[string]Executable
-	ordered  []Executable
+	Name     string
+	Desc     string
+	Overview string
+	Execs    []Executable
 
 	// this is just to decide whether a space must be printed
 	// below the overview or not.
@@ -96,29 +117,26 @@ func (m *Menu) AddFunc(name, desc string, f Func) {
 		desc: desc,
 	}
 
-	m.ordered = append(m.ordered, ff)
-	m.indexed[name] = ff
+	m.Execs = append(m.Execs, ff)
 }
 
 func (m *Menu) AddGroup(name string) {
-	if len(m.ordered) == 0 {
+	if len(m.Execs) == 0 {
 		m.firstEntryIsGroup = true
 	}
 
-	m.ordered = append(m.ordered, group(name))
+	m.Execs = append(m.Execs, Group(name))
 }
 
 func (m *Menu) AddMenu(name, desc, overview string) *Menu {
 	mm := &Menu{
-		name:     name,
-		desc:     desc,
-		overview: overview,
-		ordered:  make([]Executable, 0),
-		indexed:  make(map[string]Executable),
+		Name:     name,
+		Desc:     desc,
+		Overview: overview,
+		Execs:    make([]Executable, 0),
 	}
 
-	m.ordered = append(m.ordered, mm)
-	m.indexed[name] = mm
+	m.Execs = append(m.Execs, mm)
 
 	return mm
 }
@@ -130,31 +148,34 @@ func (m Menu) Exec(ctx context.Context, args ...string) error {
 		return nil
 	}
 
-	// if there is atleast one more arg, we need to execute the
-	// executable
-	exec, ok := m.indexed[args[0]]
-	if !ok {
-		return fmt.Errorf("arg %q not found", args[0])
+	for _, exec := range m.Execs {
+		if exec.GetName() == args[0] {
+			return exec.Exec(ctx, args[1:]...)
+		}
 	}
 
-	return exec.Exec(ctx, args[1:]...)
+	return fmt.Errorf("Invalid argument %q.", args[0])
 }
 
-func (m *Menu) print() string {
-	return fmt.Sprintf("\t%s\t%s", m.name, m.desc)
+func (m *Menu) Print() string {
+	return fmt.Sprintf("\t%s\t%s\n", m.Name, m.Desc)
+}
+
+func (m *Menu) GetName() string {
+	return m.Name
 }
 
 func (m *Menu) printMenu() {
 	var builder strings.Builder
 	tw := twx.NewWriter(&builder)
 
-	fmt.Fprintf(tw, "%s\n", m.overview)
+	fmt.Fprintf(tw, "%s\n", m.Overview)
 	if !m.firstEntryIsGroup {
 		fmt.Fprint(tw, "\n")
 	}
 
-	for _, e := range m.ordered {
-		fmt.Fprint(tw, e.print())
+	for _, e := range m.Execs {
+		fmt.Fprint(tw, e.Print())
 	}
 
 	tw.Flush()
