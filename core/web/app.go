@@ -69,3 +69,13 @@ func (a *App) Handle(method string, path string, handler Handler, mw ...Middlewa
 
 	a.mux.Handle(method, path, h)
 }
+
+// HandleStd is a convenience wrapper around Handle to make it compliant with http.HandlerFunc
+func (a *App) HandleStd(method string, path string, handler http.HandlerFunc, mw ...Middleware) {
+	wrappedHandler := func(w http.ResponseWriter, r *http.Request) error {
+		handler(w, r)
+		return nil
+	}
+
+	a.Handle(method, path, wrappedHandler)
+}
