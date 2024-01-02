@@ -15,8 +15,8 @@ import (
 	"github.com/Rockup-Consulting/std/x/logx"
 )
 
-// ETAG CACHING
 // ====================================================================
+// ETAG CACHING
 
 type memCache struct {
 	mu sync.Mutex
