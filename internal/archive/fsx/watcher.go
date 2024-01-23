@@ -55,10 +55,7 @@ func (w *Watcher) getUniqueID() string {
 	var randID string
 
 	for {
-		randID, err := randx.UID()
-		if err != nil {
-			panic(err)
-		}
+		randID := randx.UID()
 
 		// if a listener with this ID is already registered, we just pick a new one
 		if _, ok := w.listeners[randID]; ok {

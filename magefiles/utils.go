@@ -61,20 +61,13 @@ func MyIP() error {
 }
 
 // UID prints a random 32byte string
-func UID() error {
-	if uid, err := randx.UID(); err != nil {
-		return err
-	} else {
-		fmt.Println(uid)
-		return nil
-	}
+func UID() {
+	fmt.Println(randx.UID())
 }
 
 // PIN prints a random 6 character alphanumeric string
-func PIN() error {
-	pin, err := randx.UID()
-	fmt.Println(pin)
-	return err
+func PIN() {
+	fmt.Println(randx.PIN())
 }
 
 // Kill finds the PID of a process running on the specified port and then kills it

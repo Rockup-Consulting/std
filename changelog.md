@@ -1,6 +1,11 @@
 # Rockup Go Standard Library Changelog
 
-## v2.0.0
+## v1.0.4
+- archived pgxx.
+- archived redx.
+- randx panics instead of returning error, no way to handle error cases.
+
+## v1.0.3
 14/12/2023
 
 - Move package core/conf to internal/archive, prefer ardanlabs conf.

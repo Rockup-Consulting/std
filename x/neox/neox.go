@@ -6,13 +6,11 @@ package neox
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"testing"
 	"time"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j/config"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j/db"
 )
 
@@ -38,14 +36,6 @@ func NewDriver(conf Conf) (neo4j.DriverWithContext, error) {
 	driver, err := neo4j.NewDriverWithContext(
 		conf.HOST,
 		auth,
-
-		func(c *config.Config) {
-			c.MaxConnectionPoolSize = 1000
-
-			if conf.ConnectionTimeout != 0 {
-				c.SocketConnectTimeout = conf.ConnectionTimeout
-			}
-		},
 	)
 
 	if err != nil {
@@ -116,36 +106,6 @@ func Single(ctx context.Context, result neo4j.ResultWithContext, panicMsg string
 	}
 
 	return r, false, nil
-}
-
-func GetImportDirectory(session neo4j.Session) (string, error) {
-
-	result, err := session.ReadTransaction(func(tx neo4j.Transaction) (any, error) {
-		result, err := tx.Run(`
-			Call dbms.listConfig() YIELD name, value
-			WHERE name='dbms.directories.neo4j_home'
-			RETURN value
-			`,
-			map[string]any{})
-		if err != nil {
-			return nil, err
-		}
-
-		record, err := result.Single()
-		if err != nil {
-			return nil, err
-		}
-
-		importDirectory, _ := UnsafeGet[string](record, "value")
-
-		return importDirectory, nil
-	})
-
-	resultString, ok := result.(string)
-	if !ok {
-		return "", errors.New("neo4j file import directory not found")
-	}
-	return resultString, err
 }
 
 // ClearDB is a test utility that clears all data from the current instance
