@@ -2,27 +2,9 @@ package web
 
 import (
 	"encoding/json"
-	"html/template"
 	"net/http"
 	"time"
 )
-
-func Template(
-	w http.ResponseWriter,
-	statusCode int,
-	execute string,
-	t *template.Template,
-	data any,
-) error {
-	w.Header().Set("Content-Type", "text/html")
-	w.WriteHeader(statusCode)
-
-	if err := t.ExecuteTemplate(w, execute, data); err != nil {
-		panic(err)
-	}
-
-	return nil
-}
 
 // DeleteCookieAndRedirect sets a zero value and expired time to a cookie which will remove it from
 // the browser. For this to work, the given cookie has to have a the Path property set to "/"

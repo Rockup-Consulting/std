@@ -1,5 +1,11 @@
 # Rockup Go Standard Library Changelog
 
+## v1.0.5
+30/01/2024
+
+- remove some outdated internals in package web (gzip)
+- created a gzip middleware
+
 ## v1.0.4
 - archived pgxx.
 - archived redx.

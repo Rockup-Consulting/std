@@ -2,9 +2,12 @@
 package mid
 
 import (
+	"compress/gzip"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/Rockup-Consulting/std/core/web"
 )
@@ -86,4 +89,36 @@ func CatchErr(l *log.Logger) web.Middleware {
 			return nil
 		}
 	}
+}
+
+// TryGzip checks whether the calling client accepts gzip encoding.
+// If it does, the response is passed to a gzip writer, otherwise
+// the response just goes to the http.ResponseWriter
+func TryGzip(h web.Handler) web.Handler {
+	return func(w http.ResponseWriter, r *http.Request) error {
+		if strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+			w.Header().Add("Content-Encoding", "gzip")
+			gzw := gzip.NewWriter(w)
+			defer gzw.Close()
+
+			gzipRW := gzipResponseWriter{
+				ResponseWriter: w,
+				GzipWriter:     gzw,
+			}
+
+			return h(gzipRW, r)
+		} else {
+			return h(w, r)
+		}
+	}
+}
+
+// gzipResponseWriter implements io.Writer
+type gzipResponseWriter struct {
+	http.ResponseWriter
+	GzipWriter io.Writer
+}
+
+func (g gzipResponseWriter) Write(data []byte) (int, error) {
+	return g.GzipWriter.Write(data)
 }
