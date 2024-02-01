@@ -1,5 +1,8 @@
 # Rockup Go Standard Library Changelog
 
+## v1.0.7
+None - Force Upgrade
+
 ## v1.0.6
 01/02/2024
 
