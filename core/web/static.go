@@ -61,8 +61,6 @@ func md5Util(r io.Reader) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
-const DefaultCacheSeconds = 600
-
 func StaticHandler(fs fs.FS, l *log.Logger, cacheSeconds int, discardLogs bool) http.HandlerFunc {
 	c := newMemCache()
 	fileServer := http.FileServer(http.FS(fs))

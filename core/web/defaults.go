@@ -13,7 +13,7 @@ const (
 
 	// DefaultStaticCache is one year is seconds.
 	// https://developer.chrome.com/docs/lighthouse/performance/uses-long-cache-ttl
-	DefaultStaticCache = 31536000
+	DefaultStaticCacheSeconds = 31536000
 )
 
 func SetServerDefaults(server *http.Server) {
