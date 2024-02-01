@@ -1,5 +1,10 @@
 # Rockup Go Standard Library Changelog
 
+## v1.0.6
+01/02/2024
+
+- added DefaultStaticCache to package web
+
 ## v1.0.5
 30/01/2024
 
