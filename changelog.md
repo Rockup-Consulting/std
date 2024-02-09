@@ -4,6 +4,7 @@
 - added package v(alidate)
 - added package form
 - remove dimfield treemux
+- remove a bunch of outdated dependencies
 - upgrade dependencies
 
 ## v1.0.7
