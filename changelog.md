@@ -1,6 +1,7 @@
 # Rockup Go Standard Library Changelog
 
 ## v1.1.0 - go1.22
+09/02/2024
 - added package v(alidate)
 - added package form
 - remove dimfield treemux
