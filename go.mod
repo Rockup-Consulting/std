@@ -1,16 +1,14 @@
 module github.com/Rockup-Consulting/std
 
-go 1.20
+go 1.22
 
 require (
-	github.com/dimfeld/httptreemux v5.0.1+incompatible
 	github.com/go-git/go-git/v5 v5.6.1
 	github.com/jackc/pgx/v5 v5.3.1
 	github.com/magefile/mage v1.14.0
 	github.com/neo4j/neo4j-go-driver/v5 v5.8.0
 	github.com/redis/go-redis/v9 v9.0.3
 	golang.org/x/crypto v0.8.0
-	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53
 	golang.org/x/mod v0.8.0
 )
 

@@ -1,5 +1,11 @@
 # Rockup Go Standard Library Changelog
 
+## v1.1.0 - go1.22
+- added package v(alidate)
+- added package form
+- remove dimfield treemux
+- upgrade dependencies
+
 ## v1.0.7
 None - Force Upgrade
 

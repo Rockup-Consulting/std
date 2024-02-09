@@ -17,14 +17,12 @@ Further, there is a collection of common patterns under internal/examples. We al
 ## Approved Third Party Packages
 The following is a list of packages that have been approved for usage within Rockup projects.
 
-- github.com/dimfeld/httptreemux (remove once [this](https://github.com/golang/go/issues/61410) approval is through)
 - github.com/jackc/pgx
 - github.com/neo4j/neo4j-go-driver/v5
 - github.com/dgraph-io/badger
 - github.com/blugelabs/bluge
 - github.com/mitchellh/mapstructure
 - github.com/carlmjohnson/requests
-- github.com/gorilla/schema
 - github.com/biter777/countries
 - github.com/dustin/go-humanize
 - github.com/docker/go-units

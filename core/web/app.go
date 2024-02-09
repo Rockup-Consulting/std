@@ -3,8 +3,6 @@ package web
 import (
 	"fmt"
 	"net/http"
-
-	"github.com/dimfeld/httptreemux"
 )
 
 // A Handler is a type that handles a http request within our own little mini
@@ -20,20 +18,14 @@ const (
 
 // App is the entrypoint into our application
 type App struct {
-	mux *httptreemux.ContextMux
+	mux *http.ServeMux
 	mid []Middleware
-}
-
-func (a *App) NotFoundHandler(h http.HandlerFunc) {
-	a.mux.NotFoundHandler = h
 }
 
 // NewApp creates an App value that handle a set of routes for the application.
 func NewApp(mid ...Middleware) *App {
-	apiMux := httptreemux.NewContextMux()
-
 	return &App{
-		mux: apiMux,
+		mux: http.NewServeMux(),
 		mid: mid,
 	}
 }
@@ -67,7 +59,7 @@ func (a *App) Handle(method string, path string, handler Handler, mw ...Middlewa
 		}
 	}
 
-	a.mux.Handle(method, path, h)
+	a.mux.HandleFunc(fmt.Sprintf("%s %s", method, path), h)
 }
 
 // HandleStd is a convenience wrapper around Handle to make it compliant with http.HandlerFunc
