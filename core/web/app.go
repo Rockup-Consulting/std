@@ -30,16 +30,14 @@ func NewApp(mid ...Middleware) *App {
 	}
 }
 
-// ServeHTTP implements the http. Handler interface. It's the entry point for
-// all http traffic and allows the opentelemetry mux to run first to handle
-// tracing. The opentelemetry mux then calls the application mux to handle
-// application traffic.
+// ServeHTTP implements the http.Handler interface.
 func (a *App) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	a.mux.ServeHTTP(w, r)
 }
 
 // Handle sets a handler function for a given HTTP method and path pair
-// to the application server mux.
+// to the application server mux. Optionally wrapping route-specific middleware around
+// the handler
 func (a *App) Handle(method string, path string, handler Handler, mw ...Middleware) {
 
 	// First wrap handler specific middleware around this handler.
@@ -55,7 +53,7 @@ func (a *App) Handle(method string, path string, handler Handler, mw ...Middlewa
 		// call chain. If we're catching the error with a dedicated error middleware we should not
 		// get to this point.
 		if err := handler(w, r); err != nil {
-			panic(fmt.Sprintf("uncaught error: %s", err))
+			panic(fmt.Sprintf("UNCAUGHT ERROR: %s", err))
 		}
 	}
 
