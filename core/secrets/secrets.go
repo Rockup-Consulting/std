@@ -50,3 +50,15 @@ func MapFromBase64String(encodedSecrets string) (Map, error) {
 
 	return MapFromJSON(string(result))
 }
+
+// MapToBase64String takes a Map of secrets and returns it as a base64 URL Encoded string
+func MapToBase64String(m Map) (string, error) {
+	out, err := json.Marshal(m)
+	if err != nil {
+		return "", err
+	}
+
+	str := base64.URLEncoding.EncodeToString(out)
+
+	return str, nil
+}
