@@ -1,8 +1,12 @@
 package web
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -117,6 +121,27 @@ func Text(
 
 	// Write response data to response body.
 	if _, err := w.Write([]byte(data)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func FileCSV(
+	ctx context.Context,
+	w http.ResponseWriter,
+	r *http.Request,
+	file io.Reader,
+	fileName string,
+) error {
+	if !strings.HasSuffix(fileName, ".csv") {
+		fileName = fmt.Sprintf("%s.csv", fileName)
+	}
+
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", fileName))
+	w.Header().Set("Content-Type", "text/csv")
+
+	if _, err := io.Copy(w, file); err != nil {
 		return err
 	}
 

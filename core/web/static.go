@@ -30,6 +30,9 @@ func newMemCache() memCache {
 }
 
 func (c *memCache) get(route string) (string, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	fileHash, ok := c.c[route]
 	if ok {
 		return fileHash, true
