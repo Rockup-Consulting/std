@@ -28,6 +28,7 @@ The following is a list of packages that have been approved for usage within Roc
 - github.com/docker/go-units
 - github.com/alecthomas/chroma
 - github.com/go-telegram-bot-api/telegram-bot-api/v5
+- github.com/nhooyr/websocket
 
 ## Evaluating Packages
 The following is a list of packages that are under evaluation for common project usage approval.
